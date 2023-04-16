@@ -12,7 +12,15 @@ const schema = (airbaseName , workspaceKey , uid="NA") => {
               },
               {
                 "name": "VALUE",
-                "type": "longText"
+                "type": "multilineText"
+              },
+              {
+                "name": "PUBLIC",
+                "options": {
+                  "color": "greenBright",
+                  "icon": "check"
+                },
+                "type": "checkbox"
               }
             ],
             "name": "Store"

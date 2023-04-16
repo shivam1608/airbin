@@ -16,39 +16,68 @@ const getAirbase = async (airbase) => {
     return airbases.length === 1 ? airbases[0].id : null;
 }
 
+const getKeys = async (airbaseId) => {
+    const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store` , makeOptions("GET"));
+    const data = await res.json();
+    let records = data["records"];
+    records = records.map((v)=>{return {"key" : v.fields.KEY , "public" : v.fields.PUBLIC?true:false}});
+    return records;
+}
+
 const getValue = async (airbaseId , key) => {
     const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store` , makeOptions("GET"));
     const data = await res.json();
     let records = data["records"];
     records = records.filter((v)=>v.fields.KEY === key);
-    return records.length === 1 ? {"id": records[0].id , "value" : records[0].fields.VALUE} : null;
+    return records.length === 1 ? {"id": records[0].id , "value" : records[0].fields.VALUE , "public" : records[0].fields.PUBLIC} : null;
 }
 
-const putValue = async (airbaseId , key , value) => {
-    const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store` , makeOptions("POST" , JSON.stringify({
+const putValue = async (airbaseId , key , value , isPublic=false) => {
+
+    const body = {
         "fields": {
             "KEY": key,
             "VALUE": value,
+            "PUBLIC" : isPublic
         }
-    })));
+    }
+
+    if(isPublic){
+        body["PUBLIC"] = true
+    }
+
+    const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store` , makeOptions("POST" , JSON.stringify(body)));
     const data = await res.json();
     return data.id;
 }
 
 
-
-const forcePutValue = async (airbaseId , key , value) => {
+const forcePutValue = async (airbaseId , key , value , isPublic=false , patch=false) => {
     const v  = await getValue(airbaseId , key);
     if(v === null){
-        return putValue(airbaseId , key , value);
+        return putValue(airbaseId , key , value , isPublic);
     }
 
-    const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store/${v.id}` , makeOptions("PATCH" , JSON.stringify({
+    let body = {
         "fields": {
             "KEY": key,
             "VALUE": value,
         }
-    })));
+    }
+
+    if(patch){
+        body = {
+            "fields": {
+                "PUBLIC" : isPublic,
+            }
+        }
+    }else{
+        if(isPublic){
+            body["PUBLIC"] = true
+        }
+    }
+
+    const res = await fetch(`${config.BASE_URL}/${airbaseId}/Store/${v.id}` , makeOptions("PATCH" , JSON.stringify(body)));
     const data = await res.json();
     return data.id;
 }
@@ -71,4 +100,5 @@ export {
     getAirbase,
     putValue,
     getValue,
+    getKeys,
 }
