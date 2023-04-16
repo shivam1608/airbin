@@ -7,6 +7,9 @@ Now you don't need to signup for any free tier or buy any costly storage `login`
 ### Live On 🟢
 [https://airbin.deno.dev/](https://airbin.deno.dev/)
 
+#### Login to get started
+[https://airbin.deno.dev/_/login](https://airbin.deno.dev/_/login)
+
 #### Airbin can be deployed on own as `ONLY_SELF_HOSTED` for personal easy data storage
 
 
