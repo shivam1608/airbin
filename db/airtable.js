@@ -37,8 +37,7 @@ const putValue = async (airbaseId , key , value , isPublic=false) => {
     const body = {
         "fields": {
             "KEY": key,
-            "VALUE": value,
-            "PUBLIC" : isPublic
+            "VALUE": value
         }
     }
 

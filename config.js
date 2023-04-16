@@ -10,4 +10,6 @@ export default {
     "GIT_CB" : (requestToken => `https://github.com/login/oauth/access_token?client_id=${Deno.env.get("CLIENT_ID")}&client_secret=${Deno.env.get("CLIENT_SECRET")}&code=${requestToken}`),
     "GH_BASE" : "https://api.github.com",
     "HASH_SECRET" : Deno.env.get("HASH_SECRET"),
+    "ONLY_SELF_HOSTED" : false,
+    "ADMIN_TOKEN" : Deno.env.get("ADMIN_TOKEN"),
 }

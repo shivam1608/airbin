@@ -1,14 +1,11 @@
 import { Router } from "https://deno.land/x/oak@v12.1.0/mod.ts";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 import { deleteValue, forcePutValue, getAirbase, getValue } from "../db/airtable.js";
-import { textOrJSON } from "../utils/utils.js";
-import config from "../config.js";
+import { isVerified, textOrJSON } from "../utils/utils.js";
 
 const api = new Router();
 
 
 api.use(async (c , next)=>{
-   
     c.state.token = await c.state.session.get("token") || (c.request.headers.get("Authorization")?c.request.headers.get("Authorization").replace("Bearer" , "").trim() : undefined);
     await next();
 });
@@ -33,7 +30,7 @@ api.get("/:airbase/:key", async (c)=>{
 
     const isPublic = data.public;
 
-    const verified = await bcrypt.compare(`${airbase}_${config.HASH_SECRET}` , c.state.token);
+    const verified = await isVerified(airbase , c.state.token);
 
     if(!isPublic && !verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
@@ -61,7 +58,7 @@ api.post("/:airbase/:key" , async (c)=>{
     }
     
 
-    const verified = await bcrypt.compare(`${airbase}_${config.HASH_SECRET}` , c.state.token);
+    const verified = await isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;
@@ -90,7 +87,7 @@ api.patch("/:airbase/:key" , async (c)=>{
     }
     
 
-    const verified = await bcrypt.compare(`${airbase}_${config.HASH_SECRET}` , c.state.token);
+    const verified = await isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;
@@ -126,7 +123,7 @@ api.delete("/:airbase/:key" , async (c)=>{
         return;
     }
 
-    const verified = await bcrypt.compare(`${airbase}_${config.HASH_SECRET}` , c.state.token);
+    const verified = await isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;
