@@ -10,11 +10,11 @@ const textOrJSON = (value) => {
 }
 
 
-const isVerified = async (airbase , token) => {
+const isVerified = (airbase , token) => {
     if(token === config.ADMIN_TOKEN){
         return true;
     }
-    return await bcrypt.compare(`${airbase}_${config.HASH_SECRET}` , token);
+    return bcrypt.compareSync(`${airbase}_${config.HASH_SECRET}` , token);
 }
 
 export {

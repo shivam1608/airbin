@@ -11,7 +11,7 @@ admin.use(async (c , next)=>{
 
 admin.get("/_/create" , async (c)=>{
     
-    const verified = await isVerified("admin" , c.state.token);
+    const verified = isVerified("admin" , c.state.token);
 
     if(!verified){
         c.response.body = "Route only for admin!";

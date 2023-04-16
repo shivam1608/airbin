@@ -30,7 +30,7 @@ api.get("/:airbase/:key", async (c)=>{
 
     const isPublic = data.public;
 
-    const verified = await isVerified(airbase , c.state.token);
+    const verified = isVerified(airbase , c.state.token);
 
     if(!isPublic && !verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
@@ -58,7 +58,7 @@ api.post("/:airbase/:key" , async (c)=>{
     }
     
 
-    const verified = await isVerified(airbase , c.state.token);
+    const verified = isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;
@@ -87,7 +87,7 @@ api.patch("/:airbase/:key" , async (c)=>{
     }
     
 
-    const verified = await isVerified(airbase , c.state.token);
+    const verified = isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;
@@ -123,7 +123,7 @@ api.delete("/:airbase/:key" , async (c)=>{
         return;
     }
 
-    const verified = await isVerified(airbase , c.state.token);
+    const verified = isVerified(airbase , c.state.token);
     if(!verified){
         c.response.body = {message:"Auth Token Invalid!" , success : false}
         return;

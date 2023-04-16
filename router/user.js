@@ -2,6 +2,7 @@ import { Router } from "https://deno.land/x/oak@v12.1.0/mod.ts";
 import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 import config from "../config.js";
 import { createAirbase, getAirbase, getKeys } from "../db/airtable.js";
+import { isVerified } from "../utils/utils.js";
 
 const user = new Router();
 
@@ -11,6 +12,11 @@ user.get("/_/me" , async (c)=>{
     const user = await c.state.session.get("user") || c.request.headers.get("x-user");
 
     if(!token || !user){
+        c.response.body = "Invalid Request! No Auth";
+        return;
+    }
+
+    if(!isVerified(user , token)){
         c.response.body = "Invalid Request! No Auth";
         return;
     }
@@ -66,7 +72,7 @@ user.get("/_/login" , async (c) => {
             airbaseId = await createAirbase(data.id+"" , data.login);
         }
 
-        const token = await bcrypt.hash(`${data.id}_${config.HASH_SECRET}`);
+        const token = bcrypt.hashSync(`${data.id}_${config.HASH_SECRET}`);
 
         await c.state.session.set("token" , token);
         await c.state.session.set("user" , data.id+"");
