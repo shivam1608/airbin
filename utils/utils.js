@@ -1,5 +1,5 @@
 import config from "../config.js";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 
 const textOrJSON = (value) => {
     try{

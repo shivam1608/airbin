@@ -1,5 +1,5 @@
 import { Router } from "https://deno.land/x/oak@v12.1.0/mod.ts";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 import config from "../config.js";
 import { createAirbase, getAirbase, getKeys } from "../db/airtable.js";
 
